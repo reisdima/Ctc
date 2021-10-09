@@ -1,17 +1,18 @@
 package com.vincenzo.caio;
 
-/**
- * Hello world!
- */
+import java.util.List;
+
 public final class App {
     private App() {
     }
 
-    /**
-     * Says hello to the world.
-     * @param args The arguments of the program.
-     */
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        int[] a = { 1, 2, 3, 4, 5, 6, 7 };
+        // int[] a = new int[10];
+        ComplementaryPairs complementaryPairs = new ComplementaryPairs();
+        List<int[]> pares = complementaryPairs.encontrarPares(5, a);
+        for (int[] par : pares) {
+            System.out.println(par[0] + ", " + par[1]);
+        }
     }
 }
