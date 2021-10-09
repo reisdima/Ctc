@@ -6,14 +6,13 @@ public final class App {
 
     public static void main(String[] args) {
         System.out.println("Instruções");
-        Palindromo palindromo = new Palindromo();
         while (true) {
-            String texto = palindromo.obterInput();
+            String texto = Palindromo.obterInput();
             if (texto.equals("0")) {
                 break;
             }
             System.out.print("O texto \"" + texto + "\"");
-            if (palindromo.verificaPalindromo(texto)) {
+            if (Palindromo.verificaPalindromo(texto)) {
                 System.out.println(" é um palíndromo");
             } else {
                 System.out.println(" não é um palíndromo");

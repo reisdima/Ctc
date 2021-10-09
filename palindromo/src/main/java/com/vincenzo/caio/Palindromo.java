@@ -6,7 +6,7 @@ public class Palindromo {
     public Palindromo() {
     }
 
-    public boolean verificaPalindromo(String texto) {
+    static public boolean verificaPalindromo(String texto) {
         int i = 0;
         int j = texto.length() - 1;
         while (i < j) {
@@ -19,7 +19,7 @@ public class Palindromo {
         return true;
     }
 
-    public String obterInput() {
+    static public String obterInput() {
         Scanner scanner = new Scanner(System.in);
         String texto = "";
         System.out.println("Digite um texto: ");
