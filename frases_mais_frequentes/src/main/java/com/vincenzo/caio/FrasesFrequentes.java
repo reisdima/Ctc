@@ -27,10 +27,11 @@ public class FrasesFrequentes {
         frasesContador = new HashMap<>();
     }
 
-    public void executar() throws IOException {
+    public void executar() {
         criarArquivo();
         try {
-            FileInputStream inputStream = lerArquivo();
+            File file = new File("./resources/frasesFrequentes.txt");
+            FileInputStream inputStream = new FileInputStream(file);
             scannerLeitura = new Scanner(inputStream, "UTF-8");
             while (scannerLeitura.hasNextLine()) {
                 String linha = scannerLeitura.nextLine();
@@ -47,33 +48,52 @@ public class FrasesFrequentes {
 
             salvarResultado();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Não foi possível ler o arquivo com as frases misturadas.");
         }
 
     }
 
-    public void criarArquivo() throws IOException {
-        FileOutputStream outputStream = new FileOutputStream("./resources/frasesFrequentes.txt");
-        File file = new File("./resources/frases.txt");
-        FileInputStream inputStream = new FileInputStream(file);
-        scannerLeitura = new Scanner(inputStream, "UTF-8");
-        List<String> frases = new ArrayList<>();
-        while (scannerLeitura.hasNextLine()) {
-            String frase = scannerLeitura.nextLine();
-            frases.add(frase);
+    public void criarArquivo() {
+        List<String> frases = carregarFrases();
+        if (frases == null) {
+            return;
         }
-        for (int i = 0; i < LINHAS; i++) {
-            int frasesNaLinha = (int) (Math.random() * 500 + 1);
-            for (int j = 0; j < frasesNaLinha; j++) {
-                int random = (int) (Math.random() * frases.size());
-                String frase = frases.get(random);
-                byte[] strToBytes = (frase.concat("|")).getBytes();
-                outputStream.write(strToBytes);
+        try {
+            FileOutputStream outputStream = new FileOutputStream("./resources/frasesFrequentes.txt");
+            // Criação do arquivo
+            for (int i = 0; i < LINHAS; i++) {
+                int frasesNaLinha = (int) (Math.random() * 500 + 1);
+                for (int j = 0; j < frasesNaLinha; j++) {
+                    int random = (int) (Math.random() * frases.size());
+                    String frase = frases.get(random);
+                    byte[] strToBytes = (frase.concat("|")).getBytes();
+                    outputStream.write(strToBytes);
+                }
+                outputStream.write('\n');
             }
-            outputStream.write('\n');
-        }
 
-        outputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            System.out.println("Não foi possível criar arquivo com frases misturadas.");
+        }
+    }
+
+    private List<String> carregarFrases() {
+        // Arquivo com frases para gerar arquivo com elas misturadas
+        File file = new File("./resources/frases.txt");
+        try {
+            FileInputStream inputStream = new FileInputStream(file);
+            List<String> frases = new ArrayList<>();
+            scannerLeitura = new Scanner(inputStream, "UTF-8");
+            while (scannerLeitura.hasNextLine()) {
+                String frase = scannerLeitura.nextLine();
+                frases.add(frase);
+            }
+            return frases;
+        } catch (FileNotFoundException e) {
+            System.out.println("Nâo foi possível ler arquivo com as frases inciais.");
+        }
+        return null;
     }
 
     public FileInputStream lerArquivo() throws FileNotFoundException {
@@ -83,17 +103,22 @@ public class FrasesFrequentes {
         return inputStream;
     }
 
-    public void salvarResultado() throws IOException {
-        FileOutputStream outputStream = new FileOutputStream("./resources/frasesResultado.txt");
-        frasesContadorOrdenado.forEach((key, value) -> {
-            String frase = value + " - " + frasesUnicas.get(key) + '\n';
-            byte[] strToBytes = frase.getBytes();
-            try {
-                outputStream.write(strToBytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        outputStream.close();
+    public void salvarResultado() {
+        FileOutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream("./resources/frasesResultado.txt");
+            frasesContadorOrdenado.forEach((key, value) -> {
+                String frase = value + " - " + frasesUnicas.get(key) + '\n';
+                byte[] strToBytes = frase.getBytes();
+                try {
+                    outputStream.write(strToBytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            outputStream.close();
+        } catch (IOException e1) {
+            System.out.println("Não foi possível criar arquivo para salvar o resultado");
+        }
     }
 }

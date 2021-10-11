@@ -7,7 +7,6 @@ public final class App {
     }
 
     public static void main(String[] args) {
-        System.out.println("Instruções");
         try {
             Palindromo palindromo = new Palindromo();
             palindromo.executar(args);
